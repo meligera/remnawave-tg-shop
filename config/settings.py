@@ -65,6 +65,18 @@ class Settings(BaseSettings):
 
     PANEL_API_URL: Optional[str] = None
     PANEL_API_KEY: Optional[str] = None
+
+    # Nginx Authorization Configuration for Panel/Remnaware API
+    # These are used if Nginx is configured to protect the API endpoint
+    # with query parameter-based authentication.
+    # Example Nginx config might look for $arg_REMNWARE_AUTH_KEY_NAME
+    REMNWARE_AUTH_KEY_NAME: Optional[str] = Field(
+        default=None,
+        description="Name of the query parameter for Nginx auth (e.g., 'jOxkcOJw')")
+    REMNWARE_AUTH_KEY_VALUE: Optional[str] = Field(
+        default=None,
+        description="Value of the query parameter for Nginx auth (e.g., 'hnojtweu')")
+
     PANEL_USER_DEFAULT_EXPIRE_DAYS: int = Field(default=1)
     PANEL_USER_DEFAULT_TRAFFIC_BYTES: int = Field(default=0)
     PANEL_USER_DEFAULT_TRAFFIC_STRATEGY: str = Field(default="NO_RESET")

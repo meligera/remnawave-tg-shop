@@ -65,7 +65,18 @@ class PanelApiService:
 
         url_for_request = f"{self.base_url.rstrip('/')}/{endpoint.lstrip('/')}"
 
-        current_params = kwargs.get("params")
+        # Prepare parameters, including Nginx auth if configured and applicable
+        params = kwargs.pop("params", {})  # Remove params from kwargs to avoid duplicate passing
+        if self.settings.REMNWARE_AUTH_KEY_NAME and \
+           self.settings.REMNWARE_AUTH_KEY_VALUE and \
+           url_for_request.startswith(self.base_url): # Only add to our own panel API calls
+            params[self.settings.REMNWARE_AUTH_KEY_NAME] = self.settings.REMNWARE_AUTH_KEY_VALUE
+
+        # Update kwargs with the potentially modified params
+        if params: # Only add 'params' key back if there are any parameters
+            kwargs["params"] = params
+
+        current_params = kwargs.get("params") # For logging purposes
         url_with_params_for_log = url_for_request
         if current_params:
             try:
